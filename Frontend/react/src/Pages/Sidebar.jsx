@@ -1,29 +1,37 @@
 // Sidebar.jsx
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import './Sidebar.css'; 
+import { NavLink } from 'react-router-dom';
+import './Sidebar.css';
 
 const Sidebar = () => {
-  const location = useLocation();
-
   return (
     <nav className="custom-sidebar">
       <h2 className="sidebar-title">Dashboard</h2>
       <ul className="sidebar-nav">
         <li>
-          <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
+          <NavLink 
+            to="/" 
+            end 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
             Home
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/inventory" className={location.pathname === '/inventory' ? 'active' : ''}>
+          <NavLink 
+            to="/inventory" 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
             Inventory
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/settings" className={location.pathname === '/settings' ? 'active' : ''}>
+          <NavLink 
+            to="/settings" 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
             Settings
-          </Link>
+          </NavLink>
         </li>
       </ul>
     </nav>

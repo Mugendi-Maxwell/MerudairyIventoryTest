@@ -1,15 +1,22 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import HomePage from './Pages/HomePage';
+import Sidebar from './Pages/Sidebar';
 import InventoryPage from './Pages/inventoryPage';
+import HomePage from './Pages/HomePage';
+// import SettingsPage from './SettingsPage';
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/inventory" element={<InventoryPage />} />
-      </Routes>
+      <div className="app-layout">
+        <Sidebar />
+        <main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/inventory" element={<InventoryPage />} />
+            {/* <Route path="/settings" element={<SettingsPage />} /> */}
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }
