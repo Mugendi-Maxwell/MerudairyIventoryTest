@@ -11,11 +11,11 @@ class EmployeeResource(Resource):
     def post(self):
         data = request.get_json()
         result, status = EmployeeService.create_employee(data)
-        return jsonify(result), status
+        return (result), status
 
 
 class EmployeeDetailResource(Resource):
     def put(self, emp_id):
         data = request.get_json()
         result, status = EmployeeService.update_employee(emp_id, data)
-        return jsonify(result), status
+        return (result), status

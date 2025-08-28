@@ -1,7 +1,8 @@
-// Sidebar.jsx
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
+import { Library } from 'lucide-react';
 
 const Sidebar = () => {
   return (
@@ -27,10 +28,24 @@ const Sidebar = () => {
         </li>
         <li>
           <NavLink 
-            to="/settings" 
+            to="/admin/invite" 
             className={({ isActive }) => (isActive ? 'active' : '')}
           >
-            Settings
+            Admin invite
+          </NavLink>
+          <li></li>
+          <NavLink 
+            to="/issued-inventory" 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Issued Inventory
+          </NavLink>
+          <li></li>
+          <NavLink 
+            to="/admin/signup" 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Account
           </NavLink>
         </li>
       </ul>

@@ -21,12 +21,12 @@ class LocationService:
         db.session.commit()
         return location.to_dict()
 
-    @staticmethod
-    def soft_delete_location(location_id):
-        location = Location.query.get(location_id)
-        if not location or location.deleted_at is not None:
-            return {"message": "Location not found or already deleted"}, 404
+    # @staticmethod
+    # def soft_delete_location(location_id):
+    #     location = Location.query.get(location_id)
+    #     if not location or location.deleted_at is not None:
+    #         return {"message": "Location not found or already deleted"}, 404
 
-        location.deleted_at = datetime.utcnow()
-        db.session.commit()
-        return {"message": "Location soft-deleted"}, 200
+    #     location.deleted_at = datetime.utcnow()
+    #     db.session.commit()
+    #     return {"message": "Location soft-deleted"}, 200

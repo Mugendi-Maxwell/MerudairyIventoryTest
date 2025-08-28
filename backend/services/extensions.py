@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 
 
 
-# Initialize extensions
+# Initializing  extensions
 db = SQLAlchemy()
 cors = CORS()
 jwt = JWTManager()

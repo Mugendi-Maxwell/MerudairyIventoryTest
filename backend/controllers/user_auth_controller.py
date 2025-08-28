@@ -34,3 +34,5 @@ class UserLoginResource(Resource):
 
         result, status = UserService.authenticate_user(email, password)
         return result, status
+
+

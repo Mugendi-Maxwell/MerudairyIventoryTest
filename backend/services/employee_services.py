@@ -11,7 +11,7 @@ class EmployeeService:
 
     @staticmethod
     def create_employee(data):
-        required_fields = ['name', 'email', 'phone', 'user_id', 'department']
+        required_fields = ['name', 'email', 'phone', 'department']
         missing = [f for f in required_fields if not data.get(f)]
         if missing:
             return {"message": f"Missing fields: {', '.join(missing)}"}, 400
@@ -23,7 +23,6 @@ class EmployeeService:
             name=data['name'],
             email=data['email'],
             phone=data['phone'],
-            user_id=data['user_id'],
             department=data['department']
         )
         db.session.add(employee)

@@ -12,8 +12,7 @@ class User(db.Model):
     deleted_at = db.Column(db.DateTime, nullable=True)
     updated_at = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
-   
-    
+       
     def to_dict(self):
         return {
             'id': self.id,
