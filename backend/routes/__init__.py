@@ -1,5 +1,5 @@
 from controllers.user_auth_controller import UserSignupResource, UserLoginResource
-from controllers.locationController import LocationResource 
+from controllers.locationController import LocationResource, LocationDeleteResource
 from controllers.returnsController import ReturnResource, ReturnDetailResource
 from controllers.department_controller import DepartmentResource, DepartmentDetailResource
 from controllers.assigned_employee_controller import AssignedEmployeeResource, AssignedEmployeeDetailResource
@@ -21,7 +21,8 @@ def register_routes(app):
     api.add_resource(DepartmentDetailResource, '/departments/<int:dept_id>')
     api.add_resource(UserSignupResource, '/auth/signup')
     api.add_resource(UserLoginResource, '/auth/login')
-    api.add_resource(LocationResource, '/locations')
+    api.add_resource(LocationResource, '/locations') 
+    api.add_resource(LocationDeleteResource, "/locations/<int:location_id>")
     api.add_resource(ReturnResource, '/returns')
     api.add_resource(ReturnDetailResource, '/returns/<int:return_id>')
     api.add_resource(EmployeeResource, '/employees')

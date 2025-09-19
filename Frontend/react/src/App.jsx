@@ -6,6 +6,7 @@ import AdminInvite from './Pages/AdminInvite';
 import IssuedInventoryPage from './Pages/IssuedInventory';
 import AdminSignupPage from './Pages/Account';
 import ErrorBoundary from './Pages/ErrorBoundary';
+import EmployeeManagementPage from './Pages/EmployeeManagement';
 
 import './App.css';
 
@@ -22,6 +23,7 @@ function App() {
               <Route path="/admin/invite" element={<AdminInvite />} />
               <Route path="/issued-inventory/" element={<IssuedInventoryPage />} />
               <Route path="/admin/signup" element={<AdminSignupPage />} />
+              <Route path="/employees" element={<EmployeeManagementPage />} />
             </Routes>
           </ErrorBoundary>
         </div>

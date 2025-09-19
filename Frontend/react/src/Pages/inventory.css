@@ -1,6 +1,4 @@
-/* inventory.css - Professional Inventory Page Styles - Complete Version */
 
-/* Reset and base styles */
 * {
   margin: 0;
   padding: 0;
@@ -8,10 +6,11 @@
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+  color: #1a202c;
   line-height: 1.6;
+  font-weight: 400;
 }
 
 /* Main layout container */
@@ -19,17 +18,112 @@ body {
   min-height: 100vh;
   padding: 2rem;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow-x: hidden;
 }
 
+.inventory-layout::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* Tab buttons styling */
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+  z-index: 10;
+  position: relative;
+}
+
+.tab-buttons button {
+  padding: 16px 32px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.tab-buttons button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.tab-buttons button:hover::before {
+  left: 100%;
+}
+
+.tab-buttons button:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 
+    0 15px 40px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.tab-buttons button.active {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  color: #667eea;
+  box-shadow: 
+    0 12px 40px rgba(255, 255, 255, 0.3),
+    0 8px 16px rgba(102, 126, 234, 0.2);
+  transform: translateY(-2px);
+  font-weight: 700;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.tab-buttons button.active:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  color: #764ba2;
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 
+    0 20px 50px rgba(255, 255, 255, 0.4),
+    0 12px 20px rgba(118, 75, 162, 0.2);
+}
+
+/* Main content container */
 .inventory-main {
   max-width: 1400px;
   margin: 0 auto;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
   padding: 3rem;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .inventory-main::before {
@@ -38,8 +132,15 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, #667eea, #764ba2);
+  height: 5px;
+  background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 /* Loading state */
@@ -57,13 +158,13 @@ body {
 
 .loading::after {
   content: '';
-  width: 24px;
-  height: 24px;
-  margin-left: 12px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top: 3px solid white;
+  width: 32px;
+  height: 32px;
+  margin-left: 16px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid white;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 1.2s linear infinite;
 }
 
 @keyframes spin {
@@ -71,19 +172,58 @@ body {
   100% { transform: rotate(360deg); }
 }
 
+/* Search bar styling */
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  padding: 16px 20px;
+  margin: 2rem auto 3rem auto;
+  display: block;
+  border: 2px solid #e2e8f0;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  box-shadow: 
+    0 4px 20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.search-bar:focus {
+  border-color: #667eea;
+  box-shadow: 
+    0 0 0 4px rgba(102, 126, 234, 0.15),
+    0 8px 30px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  transform: translateY(-2px);
+}
+
+.search-bar::placeholder {
+  color: #a0aec0;
+  font-style: italic;
+}
+
 /* Form styling */
 .inventory-form {
-  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-  padding: 2.5rem;
-  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 20px;
   margin-bottom: 3rem;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   position: relative;
   overflow: hidden;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
   align-items: end;
 }
 
@@ -93,20 +233,22 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 4px;
   background: linear-gradient(90deg, #667eea, #764ba2);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
 }
 
 .inventory-form h2 {
   grid-column: 1 / -1;
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #2d3748;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   text-align: center;
   position: relative;
-  padding-bottom: 1rem;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  padding-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .inventory-form h2::after {
@@ -115,8 +257,8 @@ body {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 60px;
-  height: 3px;
+  width: 80px;
+  height: 4px;
   background: linear-gradient(90deg, #667eea, #764ba2);
   border-radius: 2px;
 }
@@ -124,15 +266,17 @@ body {
 .inventory-form input,
 .inventory-form select {
   width: 100%;
-  padding: 14px 16px;
+  padding: 16px 20px;
   border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 1rem;
   font-family: inherit;
-  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   outline: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   color: #2d3748;
   font-weight: 500;
 }
@@ -140,78 +284,72 @@ body {
 .inventory-form input:focus,
 .inventory-form select:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12), 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 
+    0 0 0 4px rgba(102, 126, 234, 0.15),
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
 .inventory-form input:hover,
 .inventory-form select:hover {
   border-color: #cbd5e0;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
-  transform: translateY(-0.5px);
-}
-
-.inventory-form input::placeholder {
-  color: #a0aec0;
-  font-style: italic;
-  transition: color 0.3s ease;
-}
-
-.inventory-form input:focus::placeholder {
-  color: #cbd5e0;
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
 }
 
 .inventory-form select {
   cursor: pointer;
-  background-image: linear-gradient(45deg, transparent 50%, #667eea 50%),
-                    linear-gradient(135deg, #667eea 50%, transparent 50%);
-  background-position: calc(100% - 20px) calc(1em + 2px),
-                       calc(100% - 15px) calc(1em + 2px);
+  appearance: none;
+  background-image: 
+    linear-gradient(45deg, transparent 50%, #667eea 50%),
+    linear-gradient(135deg, #667eea 50%, transparent 50%);
+  background-position: 
+    calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px);
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
-  padding-right: 40px;
-}
-
-.inventory-form select:focus {
-  background-image: linear-gradient(45deg, #764ba2 50%, transparent 50%),
-                    linear-gradient(135deg, transparent 50%, #764ba2 50%);
+  padding-right: 50px;
 }
 
 /* Enhanced Button Styles */
-.btn {
+.btn, .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 20px;
+  padding: 14px 28px;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 0.95rem;
   font-weight: 600;
   text-align: center;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  min-width: 100px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 120px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
 }
 
-.btn::before {
+.btn::before, .button::before {
   content: '';
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s ease;
 }
 
-.btn:hover::before {
+.btn:hover::before, .button:hover::before {
   left: 100%;
 }
 
@@ -221,97 +359,129 @@ body {
   color: white;
   grid-column: 1 / -1;
   justify-self: center;
-  max-width: 220px;
-  padding: 16px 32px;
-  font-size: 1.1rem;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
-  margin-top: 1rem;
+  max-width: 280px;
+  padding: 20px 40px;
+  font-size: 1.2rem;
+  box-shadow: 
+    0 10px 30px rgba(102, 126, 234, 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 1.5rem;
+  border-radius: 50px;
 }
 
 .btn-add:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 
+    0 20px 50px rgba(102, 126, 234, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.15);
   background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
 }
 
 .btn-add:active {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 10px 30px rgba(102, 126, 234, 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* Update Button */
 .btn-update {
   background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
   color: white;
-  box-shadow: 0 3px 8px rgba(72, 187, 120, 0.3);
+  box-shadow: 0 6px 20px rgba(72, 187, 120, 0.3);
 }
 
 .btn-update:hover {
   background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(72, 187, 120, 0.4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(72, 187, 120, 0.4);
 }
 
 /* Delete Button */
 .btn-delete {
   background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
   color: white;
-  box-shadow: 0 3px 8px rgba(245, 101, 101, 0.3);
+  box-shadow: 0 6px 20px rgba(245, 101, 101, 0.3);
 }
 
 .btn-delete:hover {
   background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(245, 101, 101, 0.4);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(245, 101, 101, 0.4);
 }
 
 /* Save Button */
 .btn-save {
   background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
   color: white;
-  box-shadow: 0 3px 8px rgba(72, 187, 120, 0.3);
-  padding: 10px 16px;
+  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+  padding: 12px 20px;
   font-size: 0.9rem;
-  margin-right: 0.5rem;
+  margin-right: 0.75rem;
 }
 
 .btn-save:hover {
   background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(72, 187, 120, 0.4);
 }
 
 /* Cancel Button */
 .btn-cancel {
   background: linear-gradient(135deg, #718096 0%, #4a5568 100%);
   color: white;
-  box-shadow: 0 3px 8px rgba(113, 128, 150, 0.3);
-  padding: 10px 16px;
+  box-shadow: 0 4px 15px rgba(113, 128, 150, 0.3);
+  padding: 12px 20px;
   font-size: 0.9rem;
 }
 
 .btn-cancel:hover {
   background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(113, 128, 150, 0.4);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(113, 128, 150, 0.4);
+}
+
+/* Submit Button for Issue Form */
+.button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px 40px;
+  font-size: 1.2rem;
+  box-shadow: 
+    0 10px 30px rgba(102, 126, 234, 0.4),
+    0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 2rem;
+  width: 100%;
+  border-radius: 50px;
+}
+
+.button:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 20px 50px rgba(102, 126, 234, 0.5),
+    0 8px 20px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
 }
 
 /* Grid layout for inventory cards */
 .inventory-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
 }
 
 /* Individual inventory cards */
 .inventory-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  border: 1px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -322,18 +492,20 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  height: 4px;
+  height: 5px;
   background: linear-gradient(90deg, #667eea, #764ba2);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .inventory-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
-  border-color: #667eea;
-  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  transform: translateY(-12px) scale(1.03);
+  box-shadow: 
+    0 30px 60px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(102, 126, 234, 0.3);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(247, 250, 252, 0.95) 100%);
 }
 
 .inventory-card:hover::before {
@@ -342,75 +514,81 @@ body {
 
 /* Card header */
 .inventory-card-header {
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(241, 245, 249, 0.8);
   position: relative;
 }
 
 .inventory-card h3 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
   color: #2d3748;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   word-break: break-word;
+  line-height: 1.3;
 }
 
 .inventory-category {
   display: inline-block;
-  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
-  color: #4a5568;
-  padding: 6px 14px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  color: #667eea;
+  padding: 8px 16px;
   border-radius: 25px;
   font-size: 0.8rem;
   font-weight: 700;
-  margin-right: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-right: 1rem;
+  margin-bottom: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 
+    0 3px 8px rgba(102, 126, 234, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
   transition: all 0.3s ease;
+  border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
 .inventory-category:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 15px rgba(102, 126, 234, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .inventory-availability {
   display: inline-block;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 25px;
   font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 0.75rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
 .inventory-availability.available {
-  background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.15) 0%, rgba(56, 161, 105, 0.15) 100%);
   color: #22543d;
-  border: 1px solid #68d391;
+  border: 1px solid rgba(72, 187, 120, 0.3);
 }
 
 .inventory-availability.not-available {
-  background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+  background: linear-gradient(135deg, rgba(245, 101, 101, 0.15) 0%, rgba(229, 62, 62, 0.15) 100%);
   color: #742a2a;
-  border: 1px solid #fc8181;
+  border: 1px solid rgba(245, 101, 101, 0.3);
 }
 
 .inventory-availability:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
 }
 
 .inventory-card p {
-  margin: 0.75rem 0;
-  font-size: 0.95rem;
+  margin: 1rem 0;
+  font-size: 1rem;
   color: #4a5568;
   line-height: 1.6;
   font-weight: 500;
@@ -422,22 +600,17 @@ body {
   content: '•';
   color: #667eea;
   font-weight: bold;
-  font-size: 1.2rem;
-  margin-right: 0.5rem;
-}
-
-.inventory-card p strong {
-  color: #2d3748;
-  font-weight: 700;
+  font-size: 1.3rem;
+  margin-right: 0.75rem;
 }
 
 /* Card footer buttons */
 .inventory-card-footer {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #f1f5f9;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(241, 245, 249, 0.8);
   display: flex;
-  gap: 1rem;
+  gap: 1.25rem;
   align-items: center;
   justify-content: flex-start;
 }
@@ -445,161 +618,127 @@ body {
 .inventory-card-footer .btn {
   flex: 1;
   min-width: auto;
-  padding: 10px 16px;
-  font-size: 0.85rem;
+  padding: 12px 20px;
+  font-size: 0.9rem;
 }
 
 /* Edit mode styling */
 .edit-input {
   width: 100%;
-  padding: 12px 16px;
+  padding: 14px 18px;
   border: 2px solid #e2e8f0;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 1rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+  margin-bottom: 1.25rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
   font-family: inherit;
-  font-weight: 600;
+  font-weight: 500;
   color: #2d3748;
   outline: none;
 }
 
 .edit-input:focus {
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12), 0 4px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 
+    0 0 0 4px rgba(102, 126, 234, 0.15),
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
   background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 
-.edit-input:hover {
-  border-color: #cbd5e0;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.04);
+/* Issue form styles */
+.issue-form {
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(10px);
+  padding: 3rem;
+  border-radius: 20px;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  position: relative;
+  overflow: hidden;
 }
 
-.edit-input::placeholder {
-  color: #a0aec0;
-  font-style: italic;
-  font-weight: 400;
+.issue-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  background-size: 200% 100%;
+  animation: gradientShift 3s ease-in-out infinite;
 }
 
-/* Edit mode button container */
-.edit-buttons {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
+.issue-form h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  position: relative;
+  padding-bottom: 1.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* Responsive design */
-@media (max-width: 1200px) {
-  .inventory-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .inventory-form {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
+.issue-form h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 2px;
 }
 
-@media (max-width: 768px) {
-  .inventory-layout {
-    padding: 1rem;
-  }
-  
-  .inventory-main {
-    padding: 2rem 1.5rem;
-    border-radius: 12px;
-  }
-  
-  .inventory-form {
-    padding: 2rem 1.5rem;
-    margin-bottom: 2rem;
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-  
-  .inventory-form h2 {
-    font-size: 1.5rem;
-  }
-  
-  .inventory-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-  
-  .inventory-card {
-    padding: 1.5rem;
-    border-radius: 12px;
-  }
-  
-  .inventory-card-footer {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .inventory-card-footer .btn {
-    width: 100%;
-    flex: none;
-  }
-  
-  .inventory-category,
-  .inventory-availability {
-    display: block;
-    margin: 0.5rem 0;
-    text-align: center;
-  }
-  
-  .btn-add {
-    max-width: 100%;
-    width: 100%;
-  }
-  
-  .edit-buttons {
-    flex-direction: column;
-  }
-  
-  .edit-buttons .btn {
-    width: 100%;
-  }
+.form-group {
+  margin-bottom: 2.5rem;
+  position: relative;
 }
 
-@media (max-width: 480px) {
-  .inventory-layout {
-    padding: 0.5rem;
-  }
-  
-  .inventory-main {
-    padding: 1.5rem 1rem;
-    border-radius: 8px;
-  }
-  
-  .inventory-form {
-    padding: 1.5rem 1rem;
-  }
-  
-  .inventory-form h2 {
-    font-size: 1.25rem;
-  }
-  
-  .inventory-form input,
-  .inventory-form select {
-    padding: 12px 14px;
-    font-size: 0.95rem;
-  }
-  
-  .inventory-card {
-    padding: 1.25rem;
-    border-radius: 8px;
-  }
-  
-  .inventory-card h3 {
-    font-size: 1.2rem;
-  }
-  
-  .btn-add {
-    padding: 14px 28px;
-    font-size: 1rem;
-  }
+.form-group label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: #2d3748;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
+
+.form-group .input {
+  width: 100%;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  box-shadow: 
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  color: #2d3748;
+  font-weight: 500;
+}
+
+.form-group .input:focus {
+  border-color: #667eea;
+  box-shadow: 
+    0 0 0 4px rgba(102, 126, 234, 0.15),
+    0 8px 25px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+  transform: translateY(-2px);
+}
+

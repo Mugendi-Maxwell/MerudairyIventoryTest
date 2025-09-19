@@ -1,5 +1,5 @@
 from flask_restful import Resource
-from flask import request, jsonify
+from flask import request
 from services.locationService import LocationService
 
 
@@ -12,18 +12,22 @@ class LocationResource(Resource):
         data = request.get_json()
         county = data.get("county")
         office = data.get("office")
-        created_by = data.get("created_by") 
+        created_by_user_id = data.get("created_by_user_id")
+        created_by_employee_id = data.get("created_by_employee_id")
 
-        if not county or not office or not created_by:
-            return {"message": "county, office, and created_by are required"}, 400
+        # Validate required fields
+        if not county or not office:
+            return {"message": "county and office are required"}, 400
+
+        # At least one creator must be provided
+        if not created_by_user_id and not created_by_employee_id:
+            return {"message": "At least one of created_by_user_id or created_by_employee_id is required"}, 400
 
         new_location = LocationService.create_location(data)
         return {"message": "Location created", "location": new_location}, 201
 
-    # def delete(self):
-    #     data = request.get_json()
-    #     if not data or not data.get("id"):
-    #         return {"message": "Location ID is required for deletion"}, 400
 
-    #     result, status = LocationService.soft_delete_location(data["id"])
-    #     return result, status
+class LocationDeleteResource(Resource):
+    def delete(self, location_id):
+        result, status = LocationService.soft_delete_location(location_id)
+        return result, status

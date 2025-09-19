@@ -23,7 +23,7 @@ class EmployeeService:
             name=data['name'],
             email=data['email'],
             phone=data['phone'],
-            department=data['department']
+            department_id=data['department']
         )
         db.session.add(employee)
         db.session.commit()

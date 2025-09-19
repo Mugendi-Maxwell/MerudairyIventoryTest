@@ -7,7 +7,7 @@ import { Library } from 'lucide-react';
 const Sidebar = () => {
   return (
     <nav className="custom-sidebar">
-      <h2 className="sidebar-title">Dashboard</h2>
+      <h2 className="sidebar-title"> Inventory Dashboard</h2>
       <ul className="sidebar-nav">
         <li>
           <NavLink 
@@ -48,6 +48,13 @@ const Sidebar = () => {
             Account
           </NavLink>
         </li>
+        <li></li>
+          <NavLink 
+            to="/employees" 
+            className={({ isActive }) => (isActive ? 'active' : '')}
+          >
+            Employee Management
+          </NavLink>
       </ul>
     </nav>
   );
