@@ -334,6 +334,9 @@ const InventoryDashboard = () => {
       const departments = departmentsData?.departments || departmentsData || [];
       const employees = employeesData?.employees || employeesData || [];
       const returns = returnsData?.returns || returnsData || [];
+      const totalAvailable = inventories.filter(i => i.status === "available").length;
+      const totalIssued = inventories.filter(i => i.status === "issued").length;
+
 
       // Build set of returned inventory ids (normalize different shapes)
       const returnedIds = new Set();
@@ -373,18 +376,19 @@ const InventoryDashboard = () => {
 
       // Utilization
       const utilizationRate = inventories.length > 0
-        ? Math.round((activeAssignments.length / inventories.length) * 100)
+        ? Math.round((totalIssued / inventories.length) * 100)
         : 0;
 
       setDashboardData({
         totalInventories: inventories.length,
+        totalAvailable,
         totalLocations: locations.length || Object.keys(locationCounts).length,
         topLocations,
         totalDepartments: departments.length || Object.keys(departmentCounts).length,
         topDepartments,
         totalEmployees: employees.length,
         totalReturns: returns.length,
-        totalIssued: activeAssignments.length,
+        totalIssued,
         utilizationRate
       });
 
@@ -525,8 +529,9 @@ const InventoryDashboard = () => {
               <div className="summary-item">
                 <span className="summary-label">Available Items:</span>
                 <span className="summary-value success">
-                  {(dashboardData.totalInventories - dashboardData.totalIssued).toLocaleString()}
-                </span>
+  {dashboardData.totalAvailable.toLocaleString()}
+</span>
+
               </div>
               <div className="summary-item">
                 <span className="summary-label">Top Location:</span>

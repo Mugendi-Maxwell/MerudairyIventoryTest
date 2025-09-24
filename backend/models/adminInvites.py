@@ -10,9 +10,13 @@ class AdminInvite(db.Model):
     is_used = db.Column(db.Boolean, default=False)
     expires_at = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, email, code, expires_in=10):
-        self.email = email
-        self.code = code
+
+    def __init__(self, email, code, expires_in=10, expires_at=None):
+     self.email = email
+     self.code = code
+     if expires_at:
+        self.expires_at = expires_at
+     else:
         self.expires_at = datetime.utcnow() + timedelta(minutes=expires_in)
 
     def to_dict(self):

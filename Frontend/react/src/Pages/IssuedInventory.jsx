@@ -11,7 +11,8 @@ const IssuedInventoryPage = () => {
   const [locations, setLocations] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [returns, setReturns] = useState([]);
-  const [categoryForm, setCategoryForm] = useState({ name: '', description: '' });
+  const [categories, setCategories] = useState([]);
+  const [categoryForm, setCategoryForm] = useState({ id: null, name: '', description: '' });
   const [activeTab, setActiveTab] = useState('issued');
 
   // For popup confirm modal
@@ -71,10 +72,22 @@ const IssuedInventoryPage = () => {
     }
   };
 
+  // ---------- Fetch Categories ----------
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/api/categories`);
+      setCategories(Array.isArray(res.data) ? res.data : res.data.categories || []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setCategories([]);
+    }
+  };
+
   useEffect(() => {
     fetchIssuedInventory();
     fetchEmployees();
     fetchReturns();
+    fetchCategories();
   }, []);
 
   // ---------- Handle Category Form ----------
@@ -86,12 +99,45 @@ const IssuedInventoryPage = () => {
   const handleSubmitCategory = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE}/api/categories`, categoryForm);
-      toast.success('✅ Category added successfully!');
-      setCategoryForm({ name: '', description: '' });
+      if (categoryForm.id) {
+        // Update category
+        await axios.put(`${API_BASE}/api/categories/${categoryForm.id}`, {
+          name: categoryForm.name,
+          description: categoryForm.description,
+        });
+        toast.success('✅ Category updated successfully!');
+      } else {
+        // Add new category
+        await axios.post(`${API_BASE}/api/categories`, categoryForm);
+        toast.success('✅ Category added successfully!');
+      }
+
+      setCategoryForm({ id: null, name: '', description: '' });
+      fetchCategories();
     } catch (error) {
-      console.error('Error adding category:', error);
-      toast.error('❌ Failed to add category.');
+      console.error('Error saving category:', error);
+      toast.error('❌ Failed to save category.');
+    }
+  };
+
+  const handleEditCategory = (cat) => {
+    setCategoryForm({
+      id: cat.id,
+      name: cat.name,
+      description: cat.description,
+    });
+  };
+
+  const handleDeleteCategory = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this category?")) return;
+
+    try {
+      await axios.delete(`${API_BASE}/api/categories/${id}`);
+      toast.success('✅ Category deleted successfully!');
+      fetchCategories();
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      toast.error('❌ Failed to delete category.');
     }
   };
 
@@ -108,63 +154,48 @@ const IssuedInventoryPage = () => {
   };
 
   const handleReturn = async () => {
-  const { employeeId, locationId, inventoryId, employeeName, inventoryName } = confirmPopup;
+    const { employeeId, locationId, inventoryId, employeeName, inventoryName } = confirmPopup;
 
-  try {
-    await axios.post(`${API_BASE}/returns`, {
-      employee_id: employeeId,
-      location_id: locationId,
-      inventory_id: inventoryId,
-    });
+    try {
+      await axios.post(`${API_BASE}/returns`, {
+        employee_id: employeeId,
+        location_id: locationId,
+        inventory_id: inventoryId,
+      });
 
-    toast.success(`✅ ${employeeName}'s "${inventoryName}" has been successfully returned!`);
+      toast.success(`✅ ${employeeName}'s "${inventoryName}" has been successfully returned!`);
 
-    // ✅ Remove item from issued list
-    setIssuedItems(prev =>
-      prev.filter(item => {
-        const empId = item.employee?.id || item.employee_id;
-        const locId = item.location?.id || item.location_id;
-        const invId = item.inventory_item?.id || item.inventory_item_id;
+      setIssuedItems(prev =>
+        prev.filter(item => {
+          const empId = item.employee?.id || item.employee_id;
+          const locId = item.location?.id || item.location_id;
+          const invId = item.inventory_item?.id || item.inventory_item_id;
 
-        return !(empId === employeeId && locId === locationId && invId === inventoryId);
-      })
-    );
+          return !(empId === employeeId && locId === locationId && invId === inventoryId);
+        })
+      );
 
-    // ✅ Refresh returns list
-    fetchReturns();
-
-    // ✅ Close popup
-    setConfirmPopup({ show: false });
-  } catch (error) {
-    console.error('Error adding return:', error);
-    toast.error("❌ Oops! Something went wrong while processing the return.");
-  }
-};
-
+      fetchReturns();
+      setConfirmPopup({ show: false });
+    } catch (error) {
+      console.error('Error adding return:', error);
+      toast.error("❌ Oops! Something went wrong while processing the return.");
+    }
+  };
 
   return (
     <div className="issued-inventory-page">
-      {/* ---------- Toast Notifications ---------- */}
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
 
       {/* ---------- Tabs ---------- */}
       <div className="tab-container">
-        <button
-          className={`tab-button ${activeTab === 'issued' ? 'active' : ''}`}
-          onClick={() => setActiveTab('issued')}
-        >
+        <button className={`tab-button ${activeTab === 'issued' ? 'active' : ''}`} onClick={() => setActiveTab('issued')}>
           Issued Inventory
         </button>
-        <button
-          className={`tab-button ${activeTab === 'addCategory' ? 'active' : ''}`}
-          onClick={() => setActiveTab('addCategory')}
-        >
-          Add Category
+        <button className={`tab-button ${activeTab === 'addCategory' ? 'active' : ''}`} onClick={() => setActiveTab('addCategory')}>
+          Manage Categories
         </button>
-        <button
-          className={`tab-button ${activeTab === 'returns' ? 'active' : ''}`}
-          onClick={() => setActiveTab('returns')}
-        >
+        <button className={`tab-button ${activeTab === 'returns' ? 'active' : ''}`} onClick={() => setActiveTab('returns')}>
           Returns
         </button>
       </div>
@@ -185,23 +216,9 @@ const IssuedInventoryPage = () => {
               {issuedItems.length > 0 ? (
                 issuedItems.map((item, index) => (
                   <tr key={index}>
-                    <td>
-                      {item.employee
-                        ? item.employee.name
-                        : item.employee_id
-                        ? `Employee #${item.employee_id}`
-                        : "N/A"}
-                    </td>
-                    <td>
-                      {item.inventory_item
-                        ? item.inventory_item.name
-                        : item.inventory_item_name || "N/A"}
-                    </td>
-                    <td>
-                      {item.location
-                        ? item.location.county
-                        : locations.find((loc) => loc.id === item.location_id)?.county || "Unknown"}
-                    </td>
+                    <td>{item.employee ? item.employee.name : `Employee #${item.employee_id}`}</td>
+                    <td>{item.inventory_item ? item.inventory_item.name : item.inventory_item_name || "N/A"}</td>
+                    <td>{item.location ? item.location.county : locations.find((loc) => loc.id === item.location_id)?.county || "Unknown"}</td>
                     <td>
                       <button
                         className="submit-button"
@@ -221,41 +238,58 @@ const IssuedInventoryPage = () => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan="4">No issued inventory found.</td>
-                </tr>
+                <tr><td colSpan="4">No issued inventory found.</td></tr>
               )}
             </tbody>
           </table>
         </div>
       )}
 
-      {/* ---------- Add Category Form ---------- */}
+      {/* ---------- Manage Categories ---------- */}
       {activeTab === 'addCategory' && (
         <div className="form-container">
-          <h2>Add New Category</h2>
+          <h2>{categoryForm.id ? "Update Category" : "Add New Category"}</h2>
           <form onSubmit={handleSubmitCategory} className="employee-form">
             <div className="form-group">
               <label>Name:</label>
-              <input
-                type="text"
-                name="name"
-                value={categoryForm.name}
-                onChange={handleCategoryInputChange}
-                required
-              />
+              <input type="text" name="name" value={categoryForm.name} onChange={handleCategoryInputChange} required />
             </div>
             <div className="form-group">
               <label>Description:</label>
-              <textarea
-                name="description"
-                value={categoryForm.description}
-                onChange={handleCategoryInputChange}
-                required
-              />
+              <textarea name="description" value={categoryForm.description} onChange={handleCategoryInputChange} required />
             </div>
-            <button type="submit" className="submit-button">Add Category</button>
+            <button type="submit" className="submit-button">{categoryForm.id ? "Update Category" : "Add Category"}</button>
           </form>
+
+          {/* Category Table */}
+          <div className="table-container">
+            <h3>Existing Categories</h3>
+            <table className="inventory-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {categories.length > 0 ? (
+                  categories.map((cat) => (
+                    <tr key={cat.id}>
+                      <td>{cat.name}</td>
+                      <td>{cat.description}</td>
+                      <td>
+                        <button className="edit-button" onClick={() => handleEditCategory(cat)}>Edit</button>
+                        <button className="delete-button" onClick={() => handleDeleteCategory(cat.id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr><td colSpan="3">No categories found.</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -272,23 +306,20 @@ const IssuedInventoryPage = () => {
                 <th>Date</th>
               </tr>
             </thead>
-<tbody>
-  {returns.length > 0 ? (
-    returns.map((ret, index) => (
-      <tr key={index}>
-        <td>{ret.employee?.name || "Unknown Employee"}</td>
-        <td>{ret.location?.county || "Unknown Location"}</td>
-        <td>{ret.inventory_item?.name || "Unknown Inventory"}</td>
-        <td>{new Date(ret.return_date).toLocaleString()}</td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td colSpan="4">No returns found.</td>
-    </tr>
-  )}
-</tbody>
-
+            <tbody>
+              {returns.length > 0 ? (
+                returns.map((ret, index) => (
+                  <tr key={index}>
+                    <td>{ret.employee?.name || "Unknown Employee"}</td>
+                    <td>{ret.location?.county || "Unknown Location"}</td>
+                    <td>{ret.inventory_item?.name || "Unknown Inventory"}</td>
+                    <td>{new Date(ret.return_date).toLocaleString()}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr><td colSpan="4">No returns found.</td></tr>
+              )}
+            </tbody>
           </table>
         </div>
       )}
@@ -303,12 +334,8 @@ const IssuedInventoryPage = () => {
               assigned to <strong>{confirmPopup.employeeName}</strong>?
             </p>
             <div className="popup-actions">
-              <button className="cancel-button" onClick={() => setConfirmPopup({ show: false })}>
-                Cancel
-              </button>
-              <button className="submit-button" onClick={handleReturn}>
-                Confirm
-              </button>
+              <button className="cancel-button" onClick={() => setConfirmPopup({ show: false })}>Cancel</button>
+              <button className="submit-button" onClick={handleReturn}>Confirm</button>
             </div>
           </div>
         </div>

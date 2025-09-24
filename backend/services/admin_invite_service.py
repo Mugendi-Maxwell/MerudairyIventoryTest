@@ -1,34 +1,44 @@
-
-import secrets
-from datetime import datetime
+from flask_mail import Message
+from services.extensions import db, mail
 from models.adminInvites import AdminInvite
-from services.extensions import db
+import secrets
+from datetime import datetime, timedelta
 
 class AdminInviteService:
 
     @staticmethod
     def generate_code():
-        
+        """Generate a 6-digit code"""
         return str(secrets.randbelow(1000000)).zfill(6)
 
     @staticmethod
     def create_invite(email):
-        
         code = AdminInviteService.generate_code()
 
         
         existing = AdminInvite.query.filter_by(email=email, is_used=False).first()
+
         if existing:
-            db.session.delete(existing)
+            
+            existing.code = code
+            
+            existing.expires_at = AdminInvite(email=email, code=code).expires_at  
+            db.session.commit()
+            invite = existing
+        else:
+            
+            invite = AdminInvite(email=email, code=code, expires_in=10)
+            db.session.add(invite)
             db.session.commit()
 
-       
-        new_invite = AdminInvite(email=email, code=code)
-        db.session.add(new_invite)
-        db.session.commit()
-
-       
-        print(f"[DEBUG] Code for {email} is {code}")  
+        
+        msg = Message(
+            subject="Your Login Code",
+            sender="your_email@gmail.com",  
+            recipients=[email]
+        )
+        msg.body = f"Hello,\n\nYour login code is: {code}\nThis code will expire in 10 minutes."
+        mail.send(msg)
 
         return {"message": f"Invitation sent to {email}"}, 201
 

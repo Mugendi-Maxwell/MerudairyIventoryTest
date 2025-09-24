@@ -1,4 +1,4 @@
-/* Issued Inventory Page CSS - Professional Theme Matching */
+/* Issued Inventory Page CSS - Professional Theme */
 
 /* Reset and base styles */
 * {
@@ -27,6 +27,7 @@ body {
   justify-content: center;
   gap: 1rem;
   margin-bottom: 2rem;
+  flex-wrap: wrap;
 }
 
 .tab-button {
@@ -46,6 +47,7 @@ body {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
 }
 
 .tab-button::before {
@@ -107,7 +109,9 @@ body {
 }
 
 .table-container h2,
-.form-container h2 {
+.form-container h2,
+.table-container h3,
+.form-container h3 {
   font-size: 1.75rem;
   font-weight: 700;
   color: #2d3748;
@@ -118,8 +122,15 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
+.table-container h3 {
+  font-size: 1.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+}
+
 .table-container h2::after,
-.form-container h2::after {
+.form-container h2::after,
+.table-container h3::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -140,6 +151,7 @@ body {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border: 1px solid #e2e8f0;
+  margin-bottom: 2rem;
 }
 
 .inventory-table thead {
@@ -353,6 +365,90 @@ body {
   box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
+/* Edit and Delete button styling */
+.edit-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 0.5rem;
+  background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+  color: white;
+  box-shadow: 0 3px 8px rgba(56, 178, 172, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.edit-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.edit-button:hover::before {
+  left: 100%;
+}
+
+.edit-button:hover {
+  background: linear-gradient(135deg, #2c7a7b 0%, #285e61 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(56, 178, 172, 0.4);
+}
+
+.delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+  box-shadow: 0 3px 8px rgba(245, 101, 101, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.delete-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.delete-button:hover::before {
+  left: 100%;
+}
+
+.delete-button:hover {
+  background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(245, 101, 101, 0.4);
+}
+
 /* Form submit button specific styling */
 .employee-form .submit-button {
   justify-self: center;
@@ -547,58 +643,19 @@ body {
     font-size: 1.5rem;
   }
   
+  .table-container h3 {
+    font-size: 1.25rem;
+  }
+  
   /* Make table responsive */
   .inventory-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    border-radius: 8px;
-  }
-  
-  .inventory-table thead,
-  .inventory-table tbody,
-  .inventory-table tr,
-  .inventory-table td,
-  .inventory-table th {
-    display: block;
-  }
-  
-  .inventory-table thead tr {
-    position: absolute;
-    top: -9999px;
-    left: -9999px;
-  }
-  
-  .inventory-table tr {
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  }
-  
-  .inventory-table tr:hover {
-    transform: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-  
-  .inventory-table td {
-    border: none;
-    position: relative;
-    padding: 0.75rem 0;
-    text-align: left;
-    white-space: normal;
-  }
-  
-  .inventory-table td::before {
-    content: attr(data-label) ": ";
-    font-weight: 700;
-    color: #2d3748;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
     font-size: 0.85rem;
-    margin-right: 0.5rem;
+  }
+  
+  .inventory-table thead th,
+  .inventory-table tbody td {
+    padding: 12px 10px;
+    font-size: 0.85rem;
   }
   
   /* Mobile form adjustments */
@@ -611,6 +668,14 @@ body {
   .form-group select {
     padding: 12px 14px;
     font-size: 0.95rem;
+  }
+  
+  /* Mobile button adjustments */
+  .edit-button,
+  .delete-button {
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
   }
   
   /* Mobile popup adjustments */
@@ -654,9 +719,14 @@ body {
     font-size: 1.25rem;
   }
   
-  .inventory-table tr {
-    padding: 0.75rem;
-    margin-bottom: 0.75rem;
+  .table-container h3 {
+    font-size: 1.1rem;
+  }
+  
+  .inventory-table thead th,
+  .inventory-table tbody td {
+    padding: 10px 8px;
+    font-size: 0.8rem;
   }
   
   .submit-button {
@@ -667,6 +737,12 @@ body {
   .employee-form .submit-button {
     padding: 14px 28px;
     font-size: 1rem;
+  }
+  
+  .edit-button,
+  .delete-button {
+    padding: 6px 12px;
+    font-size: 0.7rem;
   }
   
   .popup-box {
